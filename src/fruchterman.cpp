@@ -1,62 +1,87 @@
 #include <iostream>
-// #include <graph.h>
+#include <cmath>
 #include <ctime>
+
 #include "fruchterman.h"
-// #include <unistd.h> linux only
 
-void createRandmonNodes(Node *nodes, int count);
-
-// Point displacements[];
-
-// void applyCalculate()
-const short Height = 1000;
-const short Width = 1000;
-
-void createRandmonNodes(Node *nodes, int count)
+void calRepulsive(Node *nodes, size_t nodeSize, Point *displacements, float k2)
 {
-  // srand(time(NULL));
-  for (int i = 0; i < count; i++)
+  for (size_t i = 0; i < nodeSize; i++)
   {
-    nodes[i].x = arc4random() % Width;
-    nodes[i].y = arc4random() % Height;
+    for (size_t j = 0; j < nodeSize; j++)
+    {
+      if (i == j)
+      {
+        continue;
+      }
+      Node v = nodes[i];
+      Node u = nodes[j];
+      float vecX = v.x - u.x;
+      float vecY = v.y - u.y;
+      float vecLengthSqr = vecX * vecX + vecY * vecY;
+      if (vecLengthSqr < 1e-6)
+      {
+        vecLengthSqr = 1.0;
+        short sign = i > j ? 1 : -1;
+        vecX = sign * 0.01;
+        vecY = sign * 0.01;
+      }
+      float common = k2 / vecLengthSqr;
+      displacements[i].x += vecX * common;
+      displacements[i].y += vecY * common;
+    }
   }
 }
 
-// void test(Node *nodes)
-// {
-//   std::cout << "test" << std::endl;
-//   // std::cout << "nodes: " << n << std::endl;
-//   // std::cout << "edges: " << m << std::endl;
-//   nodes[0].x = 100;
-//   std::cout << "test nodes[0].x: " << nodes[0].x << std::endl;
-//   std::cout << "test nodes[0].y: " << nodes[0].y << std::endl;
-// }
-
-int main()
+void calAttractive(Node *nodes, size_t nodeSize, Edge *edges, size_t edgeSize, Point *displacements, float k)
 {
-  using namespace std;
-  clock_t start = clock();
-
-  const unsigned int nodeNum = 1000;
-
-  Node nodes[nodeNum] = {};
-  createRandmonNodes(nodes, nodeNum);
-  clock_t end = clock();
-
-
-  for (int i = 0; i < nodeNum; i++)
+  for (size_t i = 0; i < edgeSize; i++)
   {
-    cout << "nodes[" << i << "] x,y: " << nodes[i].x << "," << nodes[i].y << endl;
+    Edge edge = edges[i];
+    Node u = nodes[edge.sourceNodeArrayIdx];
+    Node v = nodes[edge.targetNodeArrayIdx];
+
+    if (edge.sourceNodeArrayIdx == edge.targetNodeArrayIdx)
+    {
+      continue;
+    }
+
+    float vecX = v.x - u.x;
+    float vecY = v.y - u.y;
+    float vecLength = sqrt(vecX * vecX + vecY * vecY);
+    float common = (vecLength * vecLength) / k;
+    displacements[edge.targetNodeArrayIdx].x -= (vecX / vecLength) / common;
+    displacements[edge.targetNodeArrayIdx].y -= (vecY / vecLength) / common;
+    displacements[edge.sourceNodeArrayIdx].x += (vecX / vecLength) * common;
+    displacements[edge.targetNodeArrayIdx].y += (vecY / vecLength) * common;
   }
+}
 
-  // Node nodes[2] = {
-  //     {2, 0.3},
-  //     {10, 19.3}};
+void calCluster(Node *nodes, size_t nodeSize, Cluster *clusters, size_t clusterSize, Point *displacements, float clusterGravity, float k)
+{
+  for (size_t i = 0; i < clusterSize; i++)
+  {
+    Cluster c = clusters[i];
+    for (size_t j = 0; j < c.nodeSize; j++)
+    {
+      Node n = nodes[c.nodeArrayIdx[j]];
+      float distLength = sqrt((n.x - c.cx) * (n.x - c.cx) + (n.y - c.cy) * (n.y - c.cy));
+      float gravityForce = k * clusterGravity;
 
-  // cout << "nodes " << nodes << endl;
-  // // test(nodes);
+      displacements[j].x -= (gravityForce * (n.x - c.cx)) / distLength;
+      displacements[j].y -= (gravityForce * (n.y - c.cy)) / distLength;
+    }
+  }
+}
 
-  // cout << "main nodes[0].x: " << nodes[0].x << endl;
-  cout << "time: " << (end - start) / (double)CLOCKS_PER_SEC * 1000 << endl;
-  return 0;
+void calGravity(Node *nodes, size_t nodeSize, Point *displacements, float gravity, float k, Center *center)
+{
+  for (size_t i = 0; i < nodeSize; i++)
+  {
+    Node n = nodes[i];
+    float gravityForce = 0.01 * k * gravity;
+
+    displacements[i].x -= gravityForce * (n.x - center->x);
+    displacements[i].y -= gravityForce * (n.y - center->y);
+  }
 }

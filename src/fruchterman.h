@@ -1,35 +1,40 @@
-#include <string>
-#include "graph.h"
+struct Node
+{
+  float x; // x coordinate
+  float y; // y coordinate
+};
 
-float center[2];
-float gravity;
-float speed;
-float k;
-float k2;
-bool clustering;
+struct Edge
+{
+  int sourceNodeArrayIdx; // node array index
+  int targetNodeArrayIdx; // node array index
+};
+
 struct Point
 {
   float x;
   float y;
 };
+
+struct Center{
+  float x;
+  float y;
+};
 struct Cluster
 {
-  std::string name;
+  int * nodeArrayIdx;
+  int nodeSize;
   float cx;
   float cy;
   int count;
 };
 
-const int SPEED_DIVISOR = 800;
+void calRepulsive(Node *nodes, size_t nodeSize, Point *displacements, float k2);
 
-void applyCalculate(Node *nodes, Edge *edges, Point *displacements, float k, float k2);
+void calAttractive(Node *nodes, size_t nodeSize, Edge *edges, size_t edgeSize, Point *displacements, float k);
 
-void calRepulsive(Node *nodes, Point *displacements, float k2);
+void calCluster(Node *nodes, size_t nodeSize, Cluster *clusters, size_t clusterSize, float clusterGravity);
 
-void calAttractive(Edge *edges, Point *displacements, float k);
+void calGravity(Node *nodes, size_t nodeSize, Point *displacements, float gravity, float k, Center *center);
 
-void calCluster(float gravity, Node *nodes, Cluster *clusters);
-
-void calGravity(Node *nodes, float gravity, float k);
-
-void reCalNodesPosition(Node *nodes, Point *displacements, float speed);
+// void reCalNodesPosition(Node *nodes, size_t nodeSize, Point *displacements, unsigned int clusterSize, float speed);

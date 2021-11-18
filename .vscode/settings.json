@@ -11,6 +11,12 @@
     "string": "cpp",
     "string_view": "cpp",
     "unordered_map": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "complex": "cpp",
+    "__string": "cpp",
+    "algorithm": "cpp",
+    "filesystem": "cpp",
+    "functional": "cpp",
+    "__config": "cpp"
   }
 }
