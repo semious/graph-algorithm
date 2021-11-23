@@ -16,6 +16,7 @@ int main(){
   point p;
   test(&p);
   cout << p.x << " " << p.y << endl;
+  cout << "size of int " << sizeof(int) << " bype" << endl;
   return 0;
 }
 

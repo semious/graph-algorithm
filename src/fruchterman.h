@@ -29,11 +29,12 @@ struct Cluster
   int count;
 };
 
-void calRepulsive(Node *nodes, size_t nodeSize, Point *displacements, float k2);
 
-void calAttractive(Node *nodes, size_t nodeSize, Edge *edges, size_t edgeSize, Point *displacements, float k);
+void calRepulsive(const Node *nodes, const size_t nodeSize, Point *displacements, const float k2);
 
-void calCluster(Node *nodes, size_t nodeSize, Cluster *clusters, size_t clusterSize, float clusterGravity);
+void calAttractive(const Node *nodes, const size_t nodeSize, const Edge *edges, const size_t edgeSize, Point *displacements, const float k);
+
+void calCluster(const Node *nodes, const size_t nodeSize, const Cluster *clusters, const size_t clusterSize, Point *displacements, const float clusterGravity, const float k);
 
 void calGravity(Node *nodes, size_t nodeSize, Point *displacements, float gravity, float k, Center *center);
 

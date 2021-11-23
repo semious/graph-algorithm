@@ -4,7 +4,9 @@
 
 #include "fruchterman.h"
 
-void calRepulsive(Node *nodes, size_t nodeSize, Point *displacements, float k2)
+
+
+void calRepulsive(const Node *nodes, const size_t nodeSize, Point *displacements, const float k2)
 {
   for (size_t i = 0; i < nodeSize; i++)
   {
@@ -33,7 +35,7 @@ void calRepulsive(Node *nodes, size_t nodeSize, Point *displacements, float k2)
   }
 }
 
-void calAttractive(Node *nodes, size_t nodeSize, Edge *edges, size_t edgeSize, Point *displacements, float k)
+void calAttractive(const Node *nodes, const size_t nodeSize, const Edge *edges, const size_t edgeSize, Point *displacements, const float k)
 {
   for (size_t i = 0; i < edgeSize; i++)
   {
@@ -57,7 +59,7 @@ void calAttractive(Node *nodes, size_t nodeSize, Edge *edges, size_t edgeSize, P
   }
 }
 
-void calCluster(Node *nodes, size_t nodeSize, Cluster *clusters, size_t clusterSize, Point *displacements, float clusterGravity, float k)
+void calCluster(const Node *nodes, const size_t nodeSize, const Cluster *clusters, const size_t clusterSize, Point *displacements, const float clusterGravity, const float k)
 {
   for (size_t i = 0; i < clusterSize; i++)
   {
@@ -84,4 +86,73 @@ void calGravity(Node *nodes, size_t nodeSize, Point *displacements, float gravit
     displacements[i].x -= gravityForce * (n.x - center->x);
     displacements[i].y -= gravityForce * (n.y - center->y);
   }
+}
+
+void createRandNodes(Node *nodes, size_t count, short width, short height)
+{
+  srand(time(NULL));
+  for (size_t i = 0; i < count; i++)
+  {
+    nodes[i].x = rand() % width;
+    nodes[i].y = rand() % height;
+  }
+}
+
+void createRandEdges(Edge *edges, size_t count, size_t nodeSize)
+{
+  srand(time(NULL));
+  for (size_t i = 0; i < count; i++)
+  {
+    edges[i].sourceNodeArrayIdx = rand() % nodeSize;
+    edges[i].targetNodeArrayIdx = rand() % nodeSize;
+  }
+}
+
+int main()
+{
+  using namespace std;
+
+  const size_t nodeNum = 8323;
+  const size_t edgeNum = 5421;
+  // int SPEED_DIVISOR = 800;
+
+  float width = 1000;
+  float height = 1000;
+  float gravity = 10;
+  float area = width * height;
+  float maxDisplace = sqrt(area) / 10;
+  float k2 = area / (nodeNum + 1);
+  float k = sqrt(k2);
+  Center center = {width / 2, height / 2};
+  Point displacements[nodeNum] = {};
+
+  // 初始化 nodes
+  Node nodes[nodeNum] = {};
+  Edge edges[edgeNum] = {};
+  createRandNodes(nodes, nodeNum, width, height);
+  createRandEdges(edges, edgeNum, nodeNum);
+
+  cout << "nodes: " << nodeNum << endl;
+  cout << "edges: " << edgeNum << endl;
+
+  // printNodes(nodes, nodeNum);
+  // printEdges(edges, edgeNum);
+  // writeToFile(nodes, nodeNum);
+  clock_t allstart = clock();
+
+  clock_t start = clock();
+  calRepulsive(nodes, nodeNum, displacements, k2);
+  clock_t end = clock();
+  cout << "calRepulsive call time: " << (end - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
+  start = clock();
+  calAttractive(nodes, nodeNum, edges, edgeNum, displacements, k);
+  end = clock();
+  cout << "calAttractive call time: " << (end - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
+
+  // calCluster(nodes, nodeNum, displacements, k);
+
+  calGravity(nodes, nodeNum, displacements, gravity, k, &center);
+  end = clock();
+  cout << "time: " << (end - allstart) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
+  return 0;
 }
