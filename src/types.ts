@@ -1,27 +1,27 @@
-interface Node
+export interface Node
 {
   x: number // x coordinate
   y: number // y coordinate
 };
 
-interface Edge
+export interface Edge
 {
   sourceNodeArrayIdx: number; // node array index
   targetNodeArrayIdx: number; // node array index
 };
 
-interface Point
+export interface Point
 {
   x: number
   y: number
 };
 
-interface Center{
+export interface Center{
   x: number;
   y: number;
 };
 
-interface Cluster
+export interface Cluster
 {
   nodes: Node[];
   cx: number;

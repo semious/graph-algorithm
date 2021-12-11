@@ -2,12 +2,6 @@
 #include <cmath>
 #include "fruchterman.h"
 
-struct VectorDis
-{
-  float x[4];
-  float y[4];
-};
-
 void calRepulsiveByRange(const int from, const int to, const Node *nodes, size_t nodeSize, Point *displacements, const float k2)
 {
   for (size_t i = from; i < to; i++)

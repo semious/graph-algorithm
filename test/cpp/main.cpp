@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cmath>
 
-#include "../fruchterman.h"
+#include "../../src/cpp/fruchterman.h"
 
 using namespace std;
 
@@ -92,6 +92,8 @@ int main()
 
   clock_t start = clock();
   calRepulsive(nodes, nodeNum, displacements, k2);
+    clock_t end = clock();
+  cout << "calRepulsive call time: " << (end - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
   // cout << "calRepulsive call time: " << (clock() - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
   calAttractive(nodes, nodeNum, edges, edgeNum, displacements, k);
   // cout << "calAttractive call time: " << (clock() - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
@@ -99,7 +101,6 @@ int main()
   // calCluster(nodes, nodeNum, displacements, k);
 
   calGravity(nodes, nodeNum, displacements, gravity, k, &center);
-  clock_t end = clock();
-  cout << "total time: " << (end - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
+
   return 0;
 }

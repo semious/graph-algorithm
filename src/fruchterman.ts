@@ -1,13 +1,8 @@
-const SPEED_DIVISOR = 800;
+// const SPEED_DIVISOR = 800;
 
-export function applyCalculate(
-  nodes: Node[],
-  edges: Edge[] | null,
-  displacements: Point[],
-  k: number,
-  k2: number
-) {
-  const self = this;
+import { Edge, Node, Point } from "./types";
+
+export function applyCalculate(nodes: Node[], edges: Edge[], displacements: Point[], k: number, k2: number) {
   calRepulsive(nodes, displacements, k2);
   if (edges) calAttractive(nodes, edges, displacements, k);
 }
@@ -41,6 +36,7 @@ export function calRepulsive(nodes: Node[], displacements: Point[], k2: number) 
       displacements[i].y += vecY * common;
     });
   });
+  return displacements;
 }
 
 export function calAttractive(nodes: Node[], edges: Edge[], displacements: Point[], k: number) {
