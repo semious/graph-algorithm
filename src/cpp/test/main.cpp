@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cmath>
 
-#include "fruchterman.h"
+#include "../fruchterman.h"
 
 using namespace std;
 
@@ -83,8 +83,8 @@ int main()
   createRandNodes(nodes, nodeNum, width, height);
   createRandEdges(edges, edgeNum, nodeNum);
 
-  cout << "nodes: " << nodeNum << endl;
-  cout << "edges: " << edgeNum << endl;
+  // cout << "nodes: " << nodeNum << endl;
+  // cout << "edges: " << edgeNum << endl;
 
   // printNodes(nodes, nodeNum);
   // printEdges(edges, edgeNum);
@@ -97,9 +97,9 @@ int main()
   // cout << "calAttractive call time: " << (clock() - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
 
   // calCluster(nodes, nodeNum, displacements, k);
-  clock_t start3 = clock();
+
   calGravity(nodes, nodeNum, displacements, gravity, k, &center);
-  // clock_t end = clock();
-  cout << "time: " << (clock() - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
+  clock_t end = clock();
+  cout << "total time: " << (end - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
   return 0;
 }

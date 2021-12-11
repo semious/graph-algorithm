@@ -1,3 +1,5 @@
+#ifndef Fruchterman_H
+#define Fruchterman_H
 struct Node
 {
   float x; // x coordinate
@@ -40,3 +42,4 @@ void calCluster(const Node *nodes, const size_t nodeSize, const Cluster *cluster
 void calGravity(Node *nodes, size_t nodeSize, Point *displacements, float gravity, float k, Center *center);
 
 // void reCalNodesPosition(Node *nodes, size_t nodeSize, Point *displacements, unsigned int clusterSize, float speed);
+#endif
