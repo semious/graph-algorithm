@@ -1,3 +1,7 @@
+#include <string>
+
+#ifndef _H_FRUCHTERMAN_
+#define _H_FRUCHTERMAN_
 struct Node
 {
   float x; // x coordinate
@@ -22,11 +26,11 @@ struct Center{
 };
 struct Cluster
 {
+  std::string name;
   int * nodeArrayIdx;
   int nodeSize;
   float cx;
   float cy;
-  int count;
 };
 
 void calRepulsive(Node *nodes, size_t nodeSize, Point *displacements, float k2);
@@ -38,3 +42,4 @@ void calCluster(Node *nodes, size_t nodeSize, Cluster *clusters, size_t clusterS
 void calGravity(Node *nodes, size_t nodeSize, Point *displacements, float gravity, float k, Center *center);
 
 // void reCalNodesPosition(Node *nodes, size_t nodeSize, Point *displacements, unsigned int clusterSize, float speed);
+#endif

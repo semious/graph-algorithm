@@ -4,7 +4,7 @@
 
 #include "fruchterman.h"
 
-void calRepulsive(Node *nodes, size_t nodeSize, Point *displacements, float k2)
+void calRepulsive(Node nodes[], size_t nodeSize, Point displacements[], float k2)
 {
   for (size_t i = 0; i < nodeSize; i++)
   {
