@@ -30,6 +30,8 @@
 *.exe
 *.out
 *.app
+*.out.js
+*.out.wasm
 
 dist
 .DS_store

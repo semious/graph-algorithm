@@ -1,8 +1,44 @@
 #include <iostream>
 #include <cmath>
-#include <ctime>
-
 #include "fruchterman.h"
+
+struct VectorDis
+{
+  float x[4];
+  float y[4];
+};
+
+void calRepulsiveByRange(const int from, const int to, const Node *nodes, size_t nodeSize, Point *displacements, const float k2)
+{
+  for (size_t i = from; i < to; i++)
+  {
+    Node v = nodes[i];
+    for (size_t j = 0; j < nodeSize; j++)
+    {
+      if(i == j)
+      {
+        continue;
+      }
+      Node u = nodes[j];
+      float vecX = v.x - u.x;
+      float vecY = v.y - u.y;
+      float vecLengthSqr = vecX * vecX + vecY * vecY;
+      if (vecLengthSqr < 1e-6)
+      {
+        vecLengthSqr = 1.0;
+        short sign = i > j ? 1 : -1;
+        vecX = sign * 0.01;
+        vecY = sign * 0.01;
+      }
+      float common = k2 / vecLengthSqr;
+      float retx = vecX * common;
+      float rety = vecY * common;
+
+      displacements[i].x += retx;
+      displacements[i].y += rety;
+    }
+  }
+}
 
 void calRepulsive(const Node *nodes, const size_t nodeSize, Point *displacements, const float k2)
 {
@@ -27,8 +63,11 @@ void calRepulsive(const Node *nodes, const size_t nodeSize, Point *displacements
         vecY = sign * 0.01;
       }
       float common = k2 / vecLengthSqr;
-      displacements[i].x += vecX * common;
-      displacements[i].y += vecY * common;
+      const float retx = vecX * common;
+      const float rety = vecY * common;
+
+      displacements[i].x += retx;
+      displacements[i].y += rety;
     }
   }
 }
@@ -111,8 +150,12 @@ int main()
   using namespace std;
 
   const size_t nodeNum = 8323;
-  const size_t edgeNum = 5421;
+  const size_t edgeNum = 2000;
   // int SPEED_DIVISOR = 800;
+
+  // 将节点转成 4n 的倍数，这样可以使用 SSE 指令
+  // 在最终处理的时候，将节点数量转成原来的大小
+  // const size_t nodeNum4n = (nodeNum / 4 + 1) * 4;
 
   float width = 1000;
   float height = 1000;
@@ -131,17 +174,25 @@ int main()
   createRandEdges(edges, edgeNum, nodeNum);
 
   cout << "nodes: " << nodeNum << endl;
+  // cout << "nodeNum4n: " << nodeNum4n << endl;
   cout << "edges: " << edgeNum << endl;
 
-  // printNodes(nodes, nodeNum);
-  // printEdges(edges, edgeNum);
-  // writeToFile(nodes, nodeNum);
   clock_t allstart = clock();
 
   clock_t start = clock();
   calRepulsive(nodes, nodeNum, displacements, k2);
   clock_t end = clock();
   cout << "calRepulsive call time: " << (end - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
+  // cout << "displacements " << displacements[0].x << " " << displacements[0].y << endl;
+  // cout << "displacements " << displacements[1].x << " " << displacements[1].y << endl;
+
+  // displacements reset 0
+  // for (size_t i = 0; i < nodeNum; i++)
+  // {
+  //   displacements[i].x = 0;
+  //   displacements[i].y = 0;
+  // }
+
   start = clock();
   calAttractive(nodes, nodeNum, edges, edgeNum, displacements, k);
   end = clock();
@@ -151,6 +202,6 @@ int main()
 
   calGravity(nodes, nodeNum, displacements, gravity, k, &center);
   end = clock();
-  cout << "time: " << (end - allstart) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
+  cout << "time: " << (end - allstart) / (double)CLOCKS_PER_SEC * 1000<< " ms" << endl;
   return 0;
 }

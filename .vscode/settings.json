@@ -17,6 +17,7 @@
     "algorithm": "cpp",
     "filesystem": "cpp",
     "functional": "cpp",
-    "__config": "cpp"
+    "__config": "cpp",
+    "ctime": "cpp"
   }
 }

@@ -63,13 +63,13 @@ void writeToFile(Node *nodes, int count)
 
 int main()
 {
-  const size_t nodeNum = 8000;
-  const size_t edgeNum = 5000;
+  const size_t nodeNum = 8323;
+  const size_t edgeNum = 5421;
   // int SPEED_DIVISOR = 800;
 
-  float width = 1000.0;
-  float height = 1000.0;
-  int gravity = 10;
+  float width = 1000;
+  float height = 1000;
+  float gravity = 10;
   float area = width * height;
   float maxDisplace = sqrt(area) / 10;
   float k2 = area / (nodeNum + 1);
@@ -92,17 +92,14 @@ int main()
 
   clock_t start = clock();
   calRepulsive(nodes, nodeNum, displacements, k2);
-  clock_t end = clock();
-  cout << "calRepulsive call time: " << (end - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
-  clock_t start2 = clock();
+  // cout << "calRepulsive call time: " << (clock() - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
   calAttractive(nodes, nodeNum, edges, edgeNum, displacements, k);
-  clock_t end2 = clock();
-  cout << "calAttractive call time: " << (end2 - start2) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
+  // cout << "calAttractive call time: " << (clock() - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
 
   // calCluster(nodes, nodeNum, displacements, k);
   clock_t start3 = clock();
   calGravity(nodes, nodeNum, displacements, gravity, k, &center);
-  clock_t end3 = clock();
-  cout << "time: " << (end3 - start3) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
+  // clock_t end = clock();
+  cout << "time: " << (clock() - start) / (double)CLOCKS_PER_SEC * 1000 << " ms" << endl;
   return 0;
 }
