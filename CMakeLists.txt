@@ -8,10 +8,12 @@ include_directories(src/cpp)
 include_directories(test/cpp)
 
 add_executable(graph_algorithm
-        src/cpp/fruchterman_simd.cpp
-        src/cpp/fruchterman_simd.h
-        src/cpp/fruchterman.cpp
-        src/cpp/fruchterman.h
+        src/cpp/wasm.h
+        src/cpp/wasm.cpp
+        src/cpp/kernel/fruchterman_simd.cpp
+        src/cpp/kernel/fruchterman_simd.h
+        src/cpp/kernel/fruchterman.cpp
+        src/cpp/kernel/fruchterman.h
         src/cpp/graph.h)
 
 add_executable(graph_algorithm_test

@@ -1,0 +1,56 @@
+load(":build_defs.bzl", "spiderjs_unit_test")
+
+config_setting(
+    name = "emscripten",
+    values = {"crosstool_top": "@emsdk//emscripten_toolchain:everything"},
+)
+
+cc_library(
+    name = "catch-main",
+    srcs = ["main.cpp"],
+    copts = ["-Icatch2"],
+    deps = [
+        "//test/cpp/catch2:catch2",
+        ":test_util",
+    ]
+)
+
+cc_library(
+    name = "test_util",
+    linkstatic = True,
+#    visibility = ["//visibility:public"],
+    srcs = ["test_util.h"],
+    deps = [
+        "//src/cpp:util",
+        "//src/cpp:tensor",
+        "//src/cpp:backend",
+    ]
+)
+
+#spiderjs_unit_test(
+#    name = "backend",
+#    srcs = ["backend.test.cpp"],
+#    deps = [
+#        "//src/cpp:backend",
+#        "//src/cpp:tensor",
+#    ]
+#)
+
+# Test suite that runs all the tests.
+test_suite(
+    name = "all-tests",
+    tests = [
+#        "backend",
+#        "transpose",
+#        "argmax",
+#        "binary",
+#        "basic_math",
+#        "conv2d",
+#        "split",
+#        "concat",
+#        "im2col",
+    ]
+)
+
+
+

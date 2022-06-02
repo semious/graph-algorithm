@@ -1,0 +1,116 @@
+load("@emsdk//emscripten_toolchain:wasm_rules.bzl", "wasm_cc_binary")
+load(":build_defs.bzl", "graph_algo_cpp_library")
+
+KERNELS_WITH_KEEPALIVE = glob(
+    ["ops/**/*.cpp"],
+    exclude = ["**/*_simd.cpp"],
+)
+
+KERNELS_WITH_SIMD_KEEPALIVE = glob(
+    ["ops/**/*.cpp"],
+)
+
+BASE_LINK_OPTS = [
+    "-s ALLOW_MEMORY_GROWTH=1",
+    "-s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE=[]",
+    "-s DISABLE_EXCEPTION_CATCHING=1",
+    "-s FILESYSTEM=0",
+    "-s EXIT_RUNTIME=0",
+    "-s EXPORTED_FUNCTIONS='[\"_malloc\", \"_free\"]'",
+    "-s EXPORTED_RUNTIME_METHODS='[\"cwrap\"]'",
+    "-s MODULARIZE=1",
+    "-s MALLOC=emmalloc",
+    "-s ENVIRONMENT=web,webview",
+]
+
+DEBUG_LINK_OPTS = [
+    "-g",
+    # "-s DEMANGLE_SUPPORT=1",
+    #"-s ASSERTIONS=1",
+    # "-fsanitize=address", # affect memory size only used for testing
+     "-s TOTAL_MEMORY=128MB", # only used for development
+]
+
+SIMD_LINK_OPTS = [
+]
+
+cc_binary(
+    name = "graph-algo-wasm.js",
+    srcs = ["wasm.cpp"] + KERNELS_WITH_KEEPALIVE,
+    linkopts = BASE_LINK_OPTS + [
+        "-s EXPORT_NAME=GRAPHALGOJSModule",
+    ] + DEBUG_LINK_OPTS,
+    deps = [
+        ":all_kernels",
+    ],
+)
+
+wasm_cc_binary(
+    name = "graph-algo-wasm",
+    cc_target = ":graph-algo-wasm.js",
+)
+
+cc_binary(
+    name = "graph-algo-wasm-simd.js",
+    srcs = ["wasm.cpp"] + KERNELS_WITH_SIMD_KEEPALIVE,
+    linkopts = BASE_LINK_OPTS + [
+        "-s EXPORT_NAME=GRAPHALGOJSModule",
+    ] + DEBUG_LINK_OPTS + SIMD_LINK_OPTS,
+    copts = select({
+        "//conditions:default": ["-Os"],
+     }),
+    defines = [] + select({
+        "//conditions:default": ["WASMSIMD"],
+    }),
+    deps = [
+        ":all_kernels",
+    ],
+)
+
+wasm_cc_binary(
+    name = "graph-algo-wasm-simd",
+    cc_target = ":graph-algo-wasm-simd.js",
+    simd = True,
+)
+
+graph_algo_cpp_library(
+    name = "wasm",
+    srcs = ["wasm.cpp"],
+    hdrs = ["wasm.h"],
+    deps = [
+#        ":macros",
+#        ":logger",
+#        ":tensor",
+#        ":pipeline",
+    ],
+)
+
+graph_algo_cpp_library(
+    name = "all_kernels",
+    deps = [
+#        ":basic_math",
+#        ":conv2d",
+#        ":relu",
+#        ":resize_bilinear",
+#        ":max_pool",
+#        ":split",
+#        ":transpose_wasm",
+#        ":transpose",
+#        ":sigmoid",
+#        ":tile",
+#        ":nms_wasm",
+#        ":argmax",
+#        ":max",
+#        ":concat",
+#        ":im2col",
+#        ":mean",
+#        ":gather_wasm",
+#        ":hard_sigmoid",
+#        ":hard_swish",
+    ],
+)
+
+
+
+
+

@@ -72,14 +72,14 @@ void calculate_cluster(const Node *nodes, const Cluster *clusters, const size_t 
   }
 }
 
-void calculate_gravity(Node *nodes, size_t nodeSize, Point *out, float gravity, float k, Center *center)
+void calculate_gravity(Node *nodes, size_t node_size, Point *out, float gravity, float k, Center *center)
 {
-  for (size_t i = 0; i < nodeSize; i++) {
+  for (size_t i = 0; i < node_size; i++) {
     Node n = nodes[i];
-    float gravityForce = 0.01f * k * gravity;
+    float gravity_force = 0.01f * k * gravity;
 
-    out[i].x -= gravityForce * (n.x - center->x);
-    out[i].y -= gravityForce * (n.y - center->y);
+    out[i].x -= gravity_force * (n.x - center->x);
+    out[i].y -= gravity_force * (n.y - center->y);
   }
 }
 

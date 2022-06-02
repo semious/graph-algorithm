@@ -28,7 +28,7 @@ void calculate_repulsive_force(const Node *nodes, const size_t nodeSize, Point *
 void calculate_attractive(const Node *nodes, const size_t nodeSize, const Edge *edges, const size_t edge_size, Point *out, const float k);
 void calculate_cluster(const Node *nodes, const size_t nodeSize, const Cluster *clusters, const size_t clusterSize, Point *displacements, const float clusterGravity, const float k);
 
-void calculate_gravity(Node *nodes, size_t nodeSize, Point *out, float gravity, float k, Center *center);
+void calculate_gravity(Node *nodes, size_t node_size, Point *out, float gravity, float k, Center *center);
 
 
 
