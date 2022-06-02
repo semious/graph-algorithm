@@ -22,8 +22,8 @@ void _calRepulsiveForceBySIMD(__m128 vx_mm, __m128 vy_mm, __m128 sign, float k2,
   //   if (cmpRet[i] < 1e-6)
   //   {
   //     vecLengthSqr[i] = 1.0f;
-  //     vx_mm[i] = sign[i] * 0.01;
-  //     vy_mm[i] = sign[i] * 0.01;
+  //     vx_mm[i] = sign[i] * 0.01f;
+  //     vy_mm[i] = sign[i] * 0.01f;
   //   }
   // }
   __m128 common = _mm_div_ps(_mm_set1_ps(k2), vecLengthSqr);

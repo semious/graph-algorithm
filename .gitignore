@@ -36,3 +36,6 @@
 dist
 .DS_store
 node_modules
+.idea
+
+cmake-build-debug

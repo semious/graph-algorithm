@@ -1,7 +1,7 @@
 {
-  "name": "graph-layout-algo",
-  "version": "1.0.0",
-  "description": "",
+  "name": "graph-algorithm-wasm",
+  "version": "0.0.1",
+  "description": "c/c++ performance graph algorithm",
   "main": "dist/index.js",
   "scripts": {
     "test": "karma start"

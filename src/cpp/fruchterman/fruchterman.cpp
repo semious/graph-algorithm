@@ -2,7 +2,7 @@
 #include <cmath>
 #include "fruchterman.h"
 
-void calRepulsiveByRange(const int from, const int to, const Node *nodes, size_t nodeSize, Point *displacements, const float k2)
+void calRepulsiveByRange(const int from, const int to, const Node *nodes, const size_t nodeSize, Point *displacements, const float k2)
 {
   for (size_t i = from; i < to; i++)
   {
