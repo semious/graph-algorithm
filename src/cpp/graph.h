@@ -9,15 +9,15 @@ struct Node
 
 struct Edge
 {
-  int sourceNodeArrayIdx; // node array index
-  int targetNodeArrayIdx; // node array index
+  size_t src_node_idx; // node array index
+  size_t target_node_idx; // node array index
 };
 
 struct Point
 {
   float x;
   float y;
-} ;
+};
 
 struct Center
 {
@@ -27,11 +27,10 @@ struct Center
 
 struct Cluster
 {
-  int *nodeArrayIdx;
-  int nodeSize;
+  size_t *nodeArrayIdx;
+  size_t node_size;
   float cx;
   float cy;
-  int count;
 };
 
 #endif //GRAPH_ALGORITHM_GRAPH_H

@@ -5,7 +5,7 @@
 #include "fruchterman_simd.h"
 #include "graph.h"
 
-void _calRepulsiveForceBySIMD(v128_t vx_mm, v128_t vy_mm, v128_t sign, float k2, VectorDis *ret)
+void calculate_repulsive_force_simd(v128_t vx_mm, v128_t vy_mm, v128_t sign, float k2, VectorDis *ret)
 {
   v128_t vecLengthSqr = wasm_f32x4_add(wasm_f32x4_mul(vx_mm, vx_mm), wasm_f32x4_mul(vy_mm, vy_mm));
   // __m128 vecZeros = _mm_setzero_ps();
@@ -56,7 +56,7 @@ void calRepulsive2(const Node *nodes, const size_t nodeSize, Point *displacement
       vy_mm = wasm_v128_load(vy);
       sign_mm = wasm_v128_load(sign);
 
-      _calRepulsiveForceBySIMD(vx_mm, vy_mm, sign_mm, k2, &vecDis);
+      calculate_repulsive_force_simd(vx_mm, vy_mm, sign_mm, k2, &vecDis);
 
       // displacements[i].x += vecDis.x[j] + vecDis.x[j+1] + vecDis.x[j+2] + vecDis.x[j+3];
       // displacements[i].y += vecDis.y[j] + vecDis.y[j+1] + vecDis.y[j+2] + vecDis.y[j+3];
@@ -146,7 +146,7 @@ void calRepulsiveByRange2(const int from, const int to, const Node *nodes, size_
   std::cout <<  "from: " << from << " to: " << to << " time end: " << clock() - start << std::endl;
 }
 
-void calRepulsive(const Node *nodes, const size_t nodeSize, Point *displacements, const float k2)
+void calculate_repulsive_force(const Node *nodes, const size_t nodeSize, Point *displacements, const float k2)
 {
   for (size_t i = 0; i < nodeSize; i++)
   {
@@ -178,15 +178,15 @@ void calRepulsive(const Node *nodes, const size_t nodeSize, Point *displacements
   }
 }
 
-void calAttractive(const Node *nodes, const size_t nodeSize, const Edge *edges, const size_t edgeSize, Point *displacements, const float k)
+void calculate_attractive(const Node *nodes, const size_t nodeSize, const Edge *edges, const size_t edgeSize, Point *displacements, const float k)
 {
   for (size_t i = 0; i < edgeSize; i++)
   {
     Edge edge = edges[i];
-    Node u = nodes[edge.sourceNodeArrayIdx];
-    Node v = nodes[edge.targetNodeArrayIdx];
+    Node u = nodes[edge.src_node_idx];
+    Node v = nodes[edge.target_node_idx];
 
-    if (edge.sourceNodeArrayIdx == edge.targetNodeArrayIdx)
+    if (edge.src_node_idx == edge.target_node_idx)
     {
       continue;
     }
@@ -195,19 +195,19 @@ void calAttractive(const Node *nodes, const size_t nodeSize, const Edge *edges, 
     float vecY = v.y - u.y;
     float vecLength = sqrt(vecX * vecX + vecY * vecY);
     float common = (vecLength * vecLength) / k;
-    displacements[edge.targetNodeArrayIdx].x -= (vecX / vecLength) / common;
-    displacements[edge.targetNodeArrayIdx].y -= (vecY / vecLength) / common;
-    displacements[edge.sourceNodeArrayIdx].x += (vecX / vecLength) * common;
-    displacements[edge.targetNodeArrayIdx].y += (vecY / vecLength) * common;
+    displacements[edge.target_node_idx].x -= (vecX / vecLength) / common;
+    displacements[edge.target_node_idx].y -= (vecY / vecLength) / common;
+    displacements[edge.src_node_idx].x += (vecX / vecLength) * common;
+    displacements[edge.src_node_idx].y += (vecY / vecLength) * common;
   }
 }
 
-void calCluster(const Node *nodes, const size_t nodeSize, const Cluster *clusters, const size_t clusterSize, Point *displacements, const float clusterGravity, const float k)
+void calculate_cluster(const Node *nodes, const size_t nodeSize, const Cluster *clusters, const size_t clusterSize, Point *displacements, const float clusterGravity, const float k)
 {
   for (size_t i = 0; i < clusterSize; i++)
   {
     Cluster c = clusters[i];
-    for (size_t j = 0; j < c.nodeSize; j++)
+    for (size_t j = 0; j < c.node_size; j++)
     {
       Node n = nodes[c.nodeArrayIdx[j]];
       float distLength = sqrt((n.x - c.cx) * (n.x - c.cx) + (n.y - c.cy) * (n.y - c.cy));
@@ -219,7 +219,7 @@ void calCluster(const Node *nodes, const size_t nodeSize, const Cluster *cluster
   }
 }
 
-void calGravity(Node *nodes, size_t nodeSize, Point *displacements, float gravity, float k, Center *center)
+void calculate_gravity(Node *nodes, size_t nodeSize, Point *displacements, float gravity, float k, Center *center)
 {
   for (size_t i = 0; i < nodeSize; i++)
   {

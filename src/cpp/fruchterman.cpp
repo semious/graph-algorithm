@@ -2,7 +2,7 @@
 #include <cmath>
 #include "fruchterman.h"
 
-void calRepulsive(const Node *nodes, const size_t nodeSize, Point *displacements, const float k2)
+void calculate_repulsive_force(const Node *nodes, const size_t nodeSize, Point *out, const float k)
 {
   for (size_t i = 0; i < nodeSize; i++) {
     for (size_t j = 0; j < nodeSize; j++) {
@@ -11,70 +11,75 @@ void calRepulsive(const Node *nodes, const size_t nodeSize, Point *displacements
       }
       Node v = nodes[i];
       Node u = nodes[j];
-      float vecX = v.x - u.x;
-      float vecY = v.y - u.y;
-      float vecLengthSqr = vecX * vecX + vecY * vecY;
-      if (vecLengthSqr < 1e-6) {
-        vecLengthSqr = 1.0;
+      float vec_x = v.x - u.x;
+      float vec_y = v.y - u.y;
+      float vec_length_square = vec_x * vec_x + vec_y * vec_y;
+      if (vec_length_square < 1e-6) {
+        vec_length_square = 1.0;
         float sign = i > j ? 1.f : -1.f;
-        vecX = sign * 0.01f;
-        vecY = sign * 0.01f;
+        vec_x = sign * 0.01f;
+        vec_y = sign * 0.01f;
       }
-      float common = k2 / vecLengthSqr;
-      const float ret_x = vecX * common;
-      const float ret_y = vecY * common;
+      float common = k / vec_length_square;
+      vec_x = vec_x * common;
+      vec_y = vec_y * common;
 
-      displacements[i].x += ret_x;
-      displacements[i].y += ret_y;
+      out[i].x += vec_x;
+      out[i].y += vec_y;
     }
   }
 }
 
-void calAttractive(const Node *nodes, const size_t nodeSize, const Edge *edges, const size_t edgeSize, Point *displacements, const float k)
+void calculate_attractive(const Node *nodes, const size_t nodeSize, const Edge *edges, const size_t edge_size, Point *out, const float k)
 {
-  for (size_t i = 0; i < edgeSize; i++) {
+  for (size_t i = 0; i < edge_size; i++) {
     Edge edge = edges[i];
-    Node u = nodes[edge.sourceNodeArrayIdx];
-    Node v = nodes[edge.targetNodeArrayIdx];
+    Node u = nodes[edge.src_node_idx];
+    Node v = nodes[edge.target_node_idx];
 
-    if (edge.sourceNodeArrayIdx == edge.targetNodeArrayIdx) {
+    if (edge.src_node_idx == edge.target_node_idx) {
       continue;
     }
 
     float vecX = v.x - u.x;
     float vecY = v.y - u.y;
-    float vecLength = sqrt(vecX * vecX + vecY * vecY);
-    float common = (vecLength * vecLength) / k;
-    displacements[edge.targetNodeArrayIdx].x -= (vecX / vecLength) / common;
-    displacements[edge.targetNodeArrayIdx].y -= (vecY / vecLength) / common;
-    displacements[edge.sourceNodeArrayIdx].x += (vecX / vecLength) * common;
-    displacements[edge.targetNodeArrayIdx].y += (vecY / vecLength) * common;
+    float vec_length_sqrt = sqrtf(vecX * vecX + vecY * vecY);
+    float common = (vec_length_sqrt * vec_length_sqrt) / k;
+
+    out[edge.target_node_idx].x -= (vecX / vec_length_sqrt) / common;
+    out[edge.target_node_idx].y -= (vecY / vec_length_sqrt) / common;
+    out[edge.src_node_idx].x += (vecX / vec_length_sqrt) * common;
+    out[edge.src_node_idx].y += (vecY / vec_length_sqrt) * common;
   }
 }
 
-void calCluster(const Node *nodes, const size_t nodeSize, const Cluster *clusters, const size_t clusterSize, Point *displacements, const float clusterGravity, const float k)
+void calculate_cluster(const Node *nodes, const Cluster *clusters, const size_t clusterSize, Point *out, const float cluster_gravity, const float k)
 {
   for (size_t i = 0; i < clusterSize; i++) {
-    Cluster c = clusters[i];
-    for (size_t j = 0; j < c.nodeSize; j++) {
-      Node n = nodes[c.nodeArrayIdx[j]];
-      float distLength = sqrt((n.x - c.cx) * (n.x - c.cx) + (n.y - c.cy) * (n.y - c.cy));
-      float gravityForce = k * clusterGravity;
+    Cluster cluster = clusters[i];
+    for (size_t j = 0; j < cluster.node_size; j++) {
+      Node n = nodes[cluster.nodeArrayIdx[j]];
 
-      displacements[j].x -= (gravityForce * (n.x - c.cx)) / distLength;
-      displacements[j].y -= (gravityForce * (n.y - c.cy)) / distLength;
+      float x_diff = n.x - cluster.cx;
+      float y_diff = n.y - cluster.cy;
+
+      float distance = sqrtf(x_diff * x_diff + y_diff * y_diff);
+      float gravityForce = k * cluster_gravity;
+
+      out[j].x -= (gravityForce * x_diff) / distance;
+      out[j].y -= (gravityForce * y_diff) / distance;
     }
   }
 }
 
-void calGravity(Node *nodes, size_t nodeSize, Point *displacements, float gravity, float k, Center *center)
+void calculate_gravity(Node *nodes, size_t nodeSize, Point *out, float gravity, float k, Center *center)
 {
   for (size_t i = 0; i < nodeSize; i++) {
     Node n = nodes[i];
     float gravityForce = 0.01f * k * gravity;
 
-    displacements[i].x -= gravityForce * (n.x - center->x);
-    displacements[i].y -= gravityForce * (n.y - center->y);
+    out[i].x -= gravityForce * (n.x - center->x);
+    out[i].y -= gravityForce * (n.y - center->y);
   }
 }
 

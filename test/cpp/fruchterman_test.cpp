@@ -40,9 +40,9 @@ int main()
   clock_t allstart = clock();
 
   clock_t start = clock();
-  calRepulsive(nodes, nodeNum, displacements, k2);
+  calculate_repulsive_force(nodes, nodeNum, displacements, k2);
   clock_t end = clock();
-  cout << "calRepulsive call time: " << (end - start) / (double) CLOCKS_PER_SEC * 1000 << " ms" << endl;
+  cout << "calculate_repulsive_force call time: " << (end - start) / (double) CLOCKS_PER_SEC * 1000 << " ms" << endl;
   // cout << "displacements " << displacements[0].x << " " << displacements[0].y << endl;
   // cout << "displacements " << displacements[1].x << " " << displacements[1].y << endl;
 
@@ -54,13 +54,13 @@ int main()
   // }
 
   start = clock();
-  calAttractive(nodes, nodeNum, edges, edgeNum, displacements, k);
+  calculate_attractive(nodes, nodeNum, edges, edgeNum, displacements, k);
   end = clock();
-  cout << "calAttractive call time: " << double(end - start) / CLOCKS_PER_SEC * 1000 << " ms" << endl;
+  cout << "calculate_attractive call time: " << double(end - start) / CLOCKS_PER_SEC * 1000 << " ms" << endl;
 
   // calCluster(nodes, nodeNum, displacements, k);
 
-  calGravity(nodes, nodeNum, displacements, gravity, k, &center);
+  calculate_gravity(nodes, nodeNum, displacements, gravity, k, &center);
   end = clock();
   cout << "time: " << double(end - allstart) / CLOCKS_PER_SEC * 1000 << " ms" << endl;
   return 0;

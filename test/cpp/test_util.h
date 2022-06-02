@@ -19,8 +19,8 @@ void createRandEdges(Edge *edges, size_t count, size_t nodeSize)
   srand(time(nullptr));
   for (size_t i = 0; i < count; i++)
   {
-    edges[i].sourceNodeArrayIdx = rand() % nodeSize;
-    edges[i].targetNodeArrayIdx = rand() % nodeSize;
+    edges[i].src_node_idx = rand() % nodeSize;
+    edges[i].target_node_idx = rand() % nodeSize;
   }
 }
 #endif //GRAPH_ALGORITHM_TEST_UTIL_H
