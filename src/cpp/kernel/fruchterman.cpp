@@ -1,85 +1,96 @@
 #include <iostream>
 #include <cmath>
-#include "fruchterman.h"
+#include "src/cpp/kernel/fruchterman.h"
 
-void calculate_repulsive_force(const Node *nodes, const size_t nodeSize, Point *out, const float k)
+namespace graph_algo
 {
-  for (size_t i = 0; i < nodeSize; i++) {
-    for (size_t j = 0; j < nodeSize; j++) {
-      if (i == j) {
+  void calculate_repulsive_force(Node *nodes, const size_t node_size, Node *out, const float k)
+  {
+    for (size_t i = 0; i < node_size; i++) {
+      for (size_t j = 0; j < node_size; j++) {
+        if (i == j) {
+          continue;
+        }
+        auto &node_i = nodes[i];
+        auto &node_j = nodes[j];
+        float delta_x = node_i.x - node_j.x;
+        float delta_y = node_i.y - node_j.y;
+        float vec_length_square = delta_x * delta_x + delta_y * delta_y;
+        if (vec_length_square < 1e-6) {
+          vec_length_square = 1.0f;
+          float sign = i > j ? 1.f : -1.f;
+          delta_x = sign * 0.01f;
+          delta_y = sign * 0.01f;
+        }
+        float common = k / vec_length_square;
+        delta_x = delta_x * common;
+        delta_y = delta_y * common;
+
+        out[i].x += delta_x;
+        out[i].y += delta_y;
+      }
+    }
+  }
+
+  void calculate_attractive_force(const Node *nodes, const Edge *edges, size_t edge_size, Node *out, float k)
+  {
+    for (size_t i = 0; i < edge_size; i++) {
+      auto &edge = edges[i];
+
+      if (edge.src_node_idx == edge.target_node_idx) {
         continue;
       }
-      Node v = nodes[i];
-      Node u = nodes[j];
-      float vec_x = v.x - u.x;
-      float vec_y = v.y - u.y;
-      float vec_length_square = vec_x * vec_x + vec_y * vec_y;
-      if (vec_length_square < 1e-6) {
-        vec_length_square = 1.0;
-        float sign = i > j ? 1.f : -1.f;
-        vec_x = sign * 0.01f;
-        vec_y = sign * 0.01f;
+
+      auto src_node_idx = edge.src_node_idx;
+      auto target_node_idx = edge.target_node_idx;
+
+      auto &node_src = nodes[src_node_idx];
+      auto &node_target = nodes[target_node_idx];
+
+      float delta_x = node_target.x - node_src.x;
+      float delta_y = node_target.y - node_src.y;
+      float vec_length_sqrt = sqrtf(delta_x * delta_x + delta_y * delta_y);
+      float common = (vec_length_sqrt * vec_length_sqrt) / k;
+
+      auto &out_target_node = out[target_node_idx];
+      auto &out_src_node = out[src_node_idx];
+
+      out_target_node.x -= (delta_x / vec_length_sqrt) / common;
+      out_target_node.y -= (delta_y / vec_length_sqrt) / common;
+      out_src_node.x += (delta_x / vec_length_sqrt) * common;
+      out_src_node.y += (delta_y / vec_length_sqrt) * common;
+    }
+  }
+
+  void calculate_cluster_force(const Node *nodes, const Cluster *clusters, const size_t cluster_size, Node *out, const float cluster_gravity, const float k)
+  {
+    for (size_t i = 0; i < cluster_size; i++) {
+      Cluster cluster = clusters[i];
+      for (size_t j = 0; j < cluster.node_size; j++) {
+        auto &node = nodes[cluster.node_array_idx[j]];
+
+        float delta_x = node.x - cluster.cx;
+        float delta_y = node.y - cluster.cy;
+
+        float distance = sqrtf(delta_x * delta_x + delta_y * delta_y);
+        float gravityForce = k * cluster_gravity;
+
+        out[j].x -= (gravityForce * delta_x) / distance;
+        out[j].y -= (gravityForce * delta_y) / distance;
       }
-      float common = k / vec_length_square;
-      vec_x = vec_x * common;
-      vec_y = vec_y * common;
-
-      out[i].x += vec_x;
-      out[i].y += vec_y;
     }
   }
-}
 
-void calculate_attractive(const Node *nodes, const size_t nodeSize, const Edge *edges, const size_t edge_size, Point *out, const float k)
-{
-  for (size_t i = 0; i < edge_size; i++) {
-    Edge edge = edges[i];
-    Node u = nodes[edge.src_node_idx];
-    Node v = nodes[edge.target_node_idx];
+  void calculate_gravity_force(Node *nodes, size_t node_size, Node *out, float gravity, float k, Center *center)
+  {
+    for (size_t i = 0; i < node_size; i++) {
+      auto &node = nodes[i];
+      float gravity_force = 0.01f * k * gravity;
 
-    if (edge.src_node_idx == edge.target_node_idx) {
-      continue;
-    }
-
-    float vecX = v.x - u.x;
-    float vecY = v.y - u.y;
-    float vec_length_sqrt = sqrtf(vecX * vecX + vecY * vecY);
-    float common = (vec_length_sqrt * vec_length_sqrt) / k;
-
-    out[edge.target_node_idx].x -= (vecX / vec_length_sqrt) / common;
-    out[edge.target_node_idx].y -= (vecY / vec_length_sqrt) / common;
-    out[edge.src_node_idx].x += (vecX / vec_length_sqrt) * common;
-    out[edge.src_node_idx].y += (vecY / vec_length_sqrt) * common;
-  }
-}
-
-void calculate_cluster(const Node *nodes, const Cluster *clusters, const size_t clusterSize, Point *out, const float cluster_gravity, const float k)
-{
-  for (size_t i = 0; i < clusterSize; i++) {
-    Cluster cluster = clusters[i];
-    for (size_t j = 0; j < cluster.node_size; j++) {
-      Node n = nodes[cluster.nodeArrayIdx[j]];
-
-      float x_diff = n.x - cluster.cx;
-      float y_diff = n.y - cluster.cy;
-
-      float distance = sqrtf(x_diff * x_diff + y_diff * y_diff);
-      float gravityForce = k * cluster_gravity;
-
-      out[j].x -= (gravityForce * x_diff) / distance;
-      out[j].y -= (gravityForce * y_diff) / distance;
+      out[i].x -= gravity_force * (node.x - center->x);
+      out[i].y -= gravity_force * (node.y - center->y);
     }
   }
-}
 
-void calculate_gravity(Node *nodes, size_t node_size, Point *out, float gravity, float k, Center *center)
-{
-  for (size_t i = 0; i < node_size; i++) {
-    Node n = nodes[i];
-    float gravity_force = 0.01f * k * gravity;
-
-    out[i].x -= gravity_force * (n.x - center->x);
-    out[i].y -= gravity_force * (n.y - center->y);
-  }
 }
 

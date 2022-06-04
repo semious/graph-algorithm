@@ -1,15 +1,18 @@
 #ifndef Fruchterman_H
 #define Fruchterman_H
 
-#include "graph.h"
+#include "src/cpp/graph.h"
 
-void calculate_repulsive_force(const Node *nodes, size_t nodeSize, Point *out, float k);
+namespace graph_algo
+{
+  void calculate_repulsive_force(Node *nodes, size_t node_size, Node *out, float k);
 
-void calculate_attractive(const Node *nodes, size_t nodeSize, const Edge *edges, size_t edge_size, Point *out, float k);
+  void calculate_attractive_force(const Node *nodes, const Edge *edges, size_t edge_size, Node *out, float k);
 
-void calculate_cluster(const Node *nodes, size_t nodeSize, const Cluster *clusters const size_t clusterSize, Point *displacements, float clusterGravity, const float k);
+  void calculate_cluster_force(const Node *nodes, const Cluster *clusters, size_t cluster_size, Node *out, float cluster_gravity, float k);
 
-void calculate_gravity(Node *nodes, size_t node_size, Point *out, float gravity, float k, Center *center);
+  void calculate_gravity_force(Node *nodes, size_t node_size, Node *out, float gravity, float k, Center *center);
 
 // void reCalNodesPosition(Node *nodes, size_t nodeSize, Point *displacements, unsigned int clusterSize, float speed);
+}
 #endif

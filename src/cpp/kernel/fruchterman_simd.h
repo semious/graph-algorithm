@@ -10,25 +10,23 @@ struct VectorDis
   float y[4];
 };
 
-void calculate_repulsive_force_simd(v128_t vx_mm, v128_t vy_mm, v128_t sign, float k2, VectorDis *ret);
 
-/**
- * @brief 为了提高效率，使用 SSE 指令，并且nodes的数量为4的倍数
- * 
- * @param nodes 
- * @param nodeSize 
- * @param displacements 
- * @param k2 
- */
-void calRepulsive2(const Node *nodes, size_t nodeSize, Point *displacements, float k2);
+namespace graph_algo
+{
+  void calculate_repulsive_force_simd(v128_t vx_mm, v128_t vy_mm, v128_t sign, float k2, VectorDis *ret);
 
-void calculate_repulsive_force(const Node *nodes, const size_t nodeSize, Point *out, const float k);
+  void calRepulsive2(const Node *nodes, size_t nodeSize, Node *displacements, float k2);
+
+  void calculate_repulsive_force(const Node *nodes, const size_t node_size, Node *out, const float k);
 
 
-void calculate_attractive(const Node *nodes, const size_t nodeSize, const Edge *edges, const size_t edge_size, Point *out, const float k);
-void calculate_cluster(const Node *nodes, const size_t nodeSize, const Cluster *clusters, const size_t clusterSize, Point *displacements, const float clusterGravity, const float k);
+  void calculate_attractive(const Node *nodes, const size_t node_size, const Edge *edges, const size_t edge_size, Node *out, const float k);
 
-void calculate_gravity(Node *nodes, size_t node_size, Point *out, float gravity, float k, Center *center);
+  void calculate_cluster(const Node *nodes, const size_t node_size, const Cluster *clusters, const size_t cluster_size, Node *displacements, const float cluster_gravity, const float k);
+
+  void calculate_gravity(Node *nodes, size_t node_size, Node *out, float gravity, float k, Center *center);
+
+}
 
 
 

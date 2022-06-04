@@ -26,13 +26,13 @@ int main()
   float k2 = area / (nodeNum + 1);
   float k = sqrt(k2);
   Center center = {width / 2, height / 2};
-  Point displacements[nodeNum] = {};
+  Node displacements[nodeNum] = {};
 
   // 初始化 nodes
   Node nodes[nodeNum] = {};
   Edge edges[edgeNum] = {};
-  createRandNodes(nodes, nodeNum, width, height);
-  createRandEdges(edges, edgeNum, nodeNum);
+  create_rand_nodes(nodes, nodeNum, width, height);
+  create_rand_edges(edges, edgeNum, nodeNum);
 
   cout << "nodes: " << nodeNum << endl;
   // cout << "nodeNum4n: " << nodeNum4n << endl;

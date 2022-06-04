@@ -13,12 +13,6 @@ struct Edge
   size_t target_node_idx; // node array index
 };
 
-struct Point
-{
-  float x;
-  float y;
-};
-
 struct Center
 {
   float x;
@@ -27,7 +21,7 @@ struct Center
 
 struct Cluster
 {
-  size_t *nodeArrayIdx;
+  size_t *node_array_idx;
   size_t node_size;
   float cx;
   float cy;

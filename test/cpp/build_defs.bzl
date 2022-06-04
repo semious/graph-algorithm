@@ -9,7 +9,7 @@ def emscripten_test_linkopts():
         "-s ALLOW_MEMORY_GROWTH=1",
     ]
 
-def spiderjs_unit_test(name, srcs, deps = [], **kwargs):
+def graph_algo_unit_test(name, srcs, deps = [], **kwargs):
     native.cc_test(
         name = name,
         srcs = srcs,

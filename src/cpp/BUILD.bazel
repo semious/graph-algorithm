@@ -3,7 +3,6 @@ load(":build_defs.bzl", "graph_algo_cpp_library")
 
 KERNELS_WITH_KEEPALIVE = glob(
     ["ops/**/*.cpp"],
-    exclude = ["**/*_simd.cpp"],
 )
 
 KERNELS_WITH_SIMD_KEEPALIVE = glob(
@@ -41,7 +40,7 @@ cc_binary(
         "-s EXPORT_NAME=GRAPHALGOJSModule",
     ] + DEBUG_LINK_OPTS,
     deps = [
-        ":all_kernels",
+        ":all_algorithms",
     ],
 )
 
@@ -86,27 +85,25 @@ graph_algo_cpp_library(
 )
 
 graph_algo_cpp_library(
-    name = "all_kernels",
+    name = "graph",
+    srcs = ["graph.h"],
     deps = [
-#        ":basic_math",
-#        ":conv2d",
-#        ":relu",
-#        ":resize_bilinear",
-#        ":max_pool",
-#        ":split",
-#        ":transpose_wasm",
-#        ":transpose",
-#        ":sigmoid",
-#        ":tile",
-#        ":nms_wasm",
-#        ":argmax",
-#        ":max",
-#        ":concat",
-#        ":im2col",
-#        ":mean",
-#        ":gather_wasm",
-#        ":hard_sigmoid",
-#        ":hard_swish",
+    ],
+)
+
+graph_algo_cpp_library(
+    name = "fruchterman",
+    srcs = ["kernel/fruchterman.cpp"],
+    hdrs = ["kernel/fruchterman.h"],
+    deps = [
+        ":graph",
+    ],
+)
+
+graph_algo_cpp_library(
+    name = "all_algorithms",
+    deps = [
+        ":fruchterman",
     ],
 )
 

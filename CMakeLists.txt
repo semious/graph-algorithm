@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(./)
 include_directories(src/cpp)
 include_directories(test/cpp)
+include_directories(test/cpp/catch2)
 
 add_executable(graph_algorithm
         src/cpp/wasm.h

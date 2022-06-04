@@ -28,7 +28,7 @@ void calculate_repulsive_force_simd(v128_t vx_mm, v128_t vy_mm, v128_t sign, flo
   wasm_v128_store(ret->y, vy_mm);
 }
 
-void calRepulsive2(const Node *nodes, const size_t nodeSize, Point *displacements, const float k2)
+void calRepulsive2(const Node *nodes, const size_t nodeSize, Node *displacements, const float k2)
 {
   float vx[4];
   float vy[4];
@@ -36,7 +36,7 @@ void calRepulsive2(const Node *nodes, const size_t nodeSize, Point *displacement
   v128_t vx_mm = wasm_f64x2_splat(.0f);
   v128_t vy_mm = wasm_f64x2_splat(.0f);
   v128_t sign_mm = wasm_f64x2_splat(.0f);
-  Point ret[4] = {0};
+  Node ret[4] = {0};
   VectorDis vecDis = {};
   int k;
 
@@ -74,7 +74,7 @@ void calRepulsive2(const Node *nodes, const size_t nodeSize, Point *displacement
   }
 }
 
-void calRepulsiveByRange(const int from, const int to, const Node *nodes, size_t nodeSize, Point *displacements, const float k2)
+void calRepulsiveByRange(const int from, const int to, const Node *nodes, size_t nodeSize, Node *displacements, const float k2)
 {
   // std::cout << "from: " << from << " to: " << to << std::endl;
   clock_t start = clock();
@@ -110,7 +110,7 @@ void calRepulsiveByRange(const int from, const int to, const Node *nodes, size_t
   std::cout <<  "from: " << from << " to: " << to << " time end: " << clock() - start << std::endl;
 }
 
-void calRepulsiveByRange2(const int from, const int to, const Node *nodes, size_t nodeSize, Point *displacements, const float k2)
+void calRepulsiveByRange2(const int from, const int to, const Node *nodes, size_t nodeSize, Node *displacements, const float k2)
 {
   // std::cout << "from: " << from << " to: " << to << std::endl;
   clock_t start = clock();
@@ -146,7 +146,7 @@ void calRepulsiveByRange2(const int from, const int to, const Node *nodes, size_
   std::cout <<  "from: " << from << " to: " << to << " time end: " << clock() - start << std::endl;
 }
 
-void calculate_repulsive_force(const Node *nodes, const size_t nodeSize, Point *displacements, const float k2)
+void calculate_repulsive_force(const Node *nodes, const size_t nodeSize, Node *displacements, const float k2)
 {
   for (size_t i = 0; i < nodeSize; i++)
   {
@@ -178,7 +178,7 @@ void calculate_repulsive_force(const Node *nodes, const size_t nodeSize, Point *
   }
 }
 
-void calculate_attractive(const Node *nodes, const size_t nodeSize, const Edge *edges, const size_t edgeSize, Point *displacements, const float k)
+void calculate_attractive(const Node *nodes, const size_t nodeSize, const Edge *edges, const size_t edgeSize, Node *displacements, const float k)
 {
   for (size_t i = 0; i < edgeSize; i++)
   {
@@ -202,14 +202,14 @@ void calculate_attractive(const Node *nodes, const size_t nodeSize, const Edge *
   }
 }
 
-void calculate_cluster(const Node *nodes, const size_t nodeSize, const Cluster *clusters, const size_t clusterSize, Point *displacements, const float clusterGravity, const float k)
+void calculate_cluster(const Node *nodes, const size_t nodeSize, const Cluster *clusters, const size_t clusterSize, Node *displacements, const float clusterGravity, const float k)
 {
   for (size_t i = 0; i < clusterSize; i++)
   {
     Cluster c = clusters[i];
     for (size_t j = 0; j < c.node_size; j++)
     {
-      Node n = nodes[c.nodeArrayIdx[j]];
+      Node n = nodes[c.node_array_idx[j]];
       float distLength = sqrt((n.x - c.cx) * (n.x - c.cx) + (n.y - c.cy) * (n.y - c.cy));
       float gravityForce = k * clusterGravity;
 
@@ -219,7 +219,7 @@ void calculate_cluster(const Node *nodes, const size_t nodeSize, const Cluster *
   }
 }
 
-void calculate_gravity(Node *nodes, size_t nodeSize, Point *displacements, float gravity, float k, Center *center)
+void calculate_gravity(Node *nodes, size_t nodeSize, Node *displacements, float gravity, float k, Center *center)
 {
   for (size_t i = 0; i < nodeSize; i++)
   {
