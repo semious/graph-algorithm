@@ -5,12 +5,7 @@ const webpack = require('webpack')
 module.exports = {
   mode: 'development',
   entry: {
-    index: './src/index.ts',
-    ops: './src/ops_bench.ts',
-    model: './src/model.ts',
-    model_worker: './src/model.worker.ts',
-    worker: './src/worker.test.ts',
-    simd: './src/simd.ts',
+    force: './src/force.ts',
   },
   // entry: './src/index.js',
   // entry: ['./src/index.ts', './src/ops_bench.ts'],
@@ -26,12 +21,16 @@ module.exports = {
       directory: path.join(__dirname, 'dist'),
     },
     compress: false,
-    port: 9001,
+    port: 9000,
     magicHtml: true,
+  },
+  experiments: {
+    asyncWebAssembly: true,
+    syncWebAssembly: true
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'benchmark app',
+      title: 'demo',
     }),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],

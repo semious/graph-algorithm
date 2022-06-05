@@ -1,6 +1,6 @@
 // const SPEED_DIVISOR = 800;
 
-import { Edge, Node, Point } from "./types";
+import { Edge, Node, Point } from "../types";
 
 export function layout(nodes: Node[], edges: Edge[], displacements: Point[], k: number, k2: number) {
   calRepulsive(nodes, displacements, k2);

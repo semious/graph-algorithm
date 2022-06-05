@@ -1,6 +1,6 @@
 {
   "include": [
-    "src/"
+    "src/",
   ],
   "exclude": [
     "node_modules/"
@@ -8,7 +8,7 @@
   "compilerOptions": {
     "module": "ES6",
     "moduleResolution": "node",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "sourceMap": true,
     "inlineSources": true,
     "removeComments": false,
@@ -18,14 +18,15 @@
     "target": "ES6",
     "lib": [
       "ES6",
+      "dom"
     ],
     "outDir": "./dist",
-    "noUnusedLocals": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
+    "noUnusedLocals": false,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "alwaysStrict": false,
     "noUnusedParameters": false,
-    "pretty": true,
+    "pretty": false,
     "noFallthroughCasesInSwitch": true,
     "allowUnreachableCode": false,
     "incremental": false,

@@ -1,5 +1,5 @@
 {
-  "name": "spiderjs-wasm-example",
+  "name": "graph-algo-wasm-example",
   "version": "1.0.0",
   "private": true,
   "description": "Sample webpack app that uses the WASM",
@@ -9,11 +9,8 @@
     "watch": "webpack serve"
   },
   "dependencies": {
-    "@alipay/ant-tfjs-backend-wasm": "^0.1.6",
-    "@alipay/ant-tfjs-lite": "^0.9.9",
-    "@alipay/ant-tfjs-lite-core": "^0.1.16",
-    "@alipay/ant-tfjs-lite-onnxmodel": "^0.0.10",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "graph-algorithm-wasm": "link:../"
   },
   "devDependencies": {
     "@webpack-cli/serve": "^1.6.1",
