@@ -2,7 +2,7 @@
 
 import { Edge, Node, Point } from "./types";
 
-export function applyCalculate(nodes: Node[], edges: Edge[], displacements: Point[], k: number, k2: number) {
+export function layout(nodes: Node[], edges: Edge[], displacements: Point[], k: number, k2: number) {
   calRepulsive(nodes, displacements, k2);
   if (edges) calAttractive(nodes, edges, displacements, k);
 }

@@ -5,7 +5,7 @@
 #include <cstdint>
 
 
-namespace graph_algo_js
+namespace graph_algo
 {
   namespace wasm
   {

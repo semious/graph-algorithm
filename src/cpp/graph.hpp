@@ -1,5 +1,5 @@
-#ifndef GRAPH_ALGORITHM_GRAPH_H
-#define GRAPH_ALGORITHM_GRAPH_H
+#ifndef GRAPH_ALGORITHM_GRAPH_HPP
+#define GRAPH_ALGORITHM_GRAPH_HPP
 
 struct Node
 {
@@ -27,4 +27,4 @@ struct Cluster
   float cy;
 };
 
-#endif //GRAPH_ALGORITHM_GRAPH_H
+#endif //GRAPH_ALGORITHM_GRAPH_HPP

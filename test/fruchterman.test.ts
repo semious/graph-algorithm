@@ -13,7 +13,7 @@ function createRandomNodes(count: number): Node[] {
   return nodes;
 }
 
-function createRandomEdges(count: number, nodeSize: number): Edge[] {
+export function createRandomEdges(count: number, nodeSize: number): Edge[] {
   const edges: Edge[] = [];
   const counts = Math.min(count, 2 * nodeSize - 2);
   for (let i = 0; i < counts; i++) {
@@ -29,9 +29,9 @@ describe('src/fruchterman.ts', () => {
   describe('calRepulsive', () => {
     it('calRepulsive should success', () => {
       const nodeSize = 8323;
-      const edgeSize = 5421;
+      // const edgeSize = 5421;
       const nodes = createRandomNodes(nodeSize);
-      const edges = createRandomEdges(edgeSize, nodeSize);
+      // const edges = createRandomEdges(edgeSize, nodeSize);
       // console.log('nodes :>> ', nodes[0]);
       // console.log('edges :>> ', edges[0]);
       const displacements = nodes.map(() => ({ x: 0, y: 0 }));
@@ -39,7 +39,7 @@ describe('src/fruchterman.ts', () => {
       const result = calRepulsive(nodes, displacements , 123,);
       const end = Date.now();
       console.log('calRepulsive time :>> ', end - start);
-      // console.log('result :>> ', result);
+      console.log('result :>> ', result);
       // expect(result).toBe(0);
     });
   });

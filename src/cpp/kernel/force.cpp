@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include "src/cpp/kernel/fruchterman.h"
+#include "src/cpp/kernel/force.hpp"
 
 namespace graph_algo
 {

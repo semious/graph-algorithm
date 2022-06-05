@@ -2,7 +2,7 @@
 #ifndef GRAPH_ALGORITHM_TEST_UTIL_H
 #define GRAPH_ALGORITHM_TEST_UTIL_H
 
-#include "src/cpp/graph.h"
+#include "src/cpp/graph.hpp"
 
 #include <ctime>
 #include <random>

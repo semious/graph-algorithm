@@ -9,16 +9,14 @@ include_directories(test/cpp)
 include_directories(test/cpp/catch2)
 
 add_executable(graph_algorithm
-        src/cpp/wasm.h
+        src/cpp/wasm.hpp
         src/cpp/wasm.cpp
-        src/cpp/kernel/fruchterman_simd.cpp
-        src/cpp/kernel/fruchterman_simd.h
-        src/cpp/kernel/fruchterman.cpp
-        src/cpp/kernel/fruchterman.h
-        src/cpp/graph.h)
-
-add_executable(graph_algorithm_test
-        test/cpp/test_util.h
-        test/cpp/fruchterman_test.cpp
-        test/cpp/fruchterman_simd_test.cpp
+        src/cpp/graph.hpp
+        src/cpp/kernel/force.cpp
+        src/cpp/kernel/force.hpp
         )
+
+#add_executable(graph_algorithm_test
+#        test/cpp/test_util.h
+#        test/cpp/force_test.cpp
+#        )

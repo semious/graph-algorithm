@@ -1,7 +1,7 @@
 #ifndef Fruchterman_H
 #define Fruchterman_H
 
-#include "src/cpp/graph.h"
+#include "src/cpp/graph.hpp"
 
 namespace graph_algo
 {

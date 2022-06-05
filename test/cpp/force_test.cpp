@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "src/cpp/kernel/fruchterman.h"
+#include "src/cpp/kernel/force.hpp"
 #include "test_util.h"
 
 #include <cstddef>

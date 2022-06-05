@@ -27,7 +27,7 @@ DEBUG_LINK_OPTS = [
     # "-s DEMANGLE_SUPPORT=1",
     #"-s ASSERTIONS=1",
     # "-fsanitize=address", # affect memory size only used for testing
-     "-s TOTAL_MEMORY=128MB", # only used for development
+#     "-s TOTAL_MEMORY=128MB", # only used for development
 ]
 
 SIMD_LINK_OPTS = [
@@ -75,7 +75,7 @@ wasm_cc_binary(
 graph_algo_cpp_library(
     name = "wasm",
     srcs = ["wasm.cpp"],
-    hdrs = ["wasm.h"],
+    hdrs = ["wasm.hpp"],
     deps = [
 #        ":macros",
 #        ":logger",
@@ -86,15 +86,15 @@ graph_algo_cpp_library(
 
 graph_algo_cpp_library(
     name = "graph",
-    srcs = ["graph.h"],
+    srcs = ["graph.hpp"],
     deps = [
     ],
 )
 
 graph_algo_cpp_library(
-    name = "fruchterman",
-    srcs = ["kernel/fruchterman.cpp"],
-    hdrs = ["kernel/fruchterman.h"],
+    name = "force",
+    srcs = ["kernel/force.cpp"],
+    hdrs = ["kernel/force.hpp"],
     deps = [
         ":graph",
     ],
@@ -103,7 +103,7 @@ graph_algo_cpp_library(
 graph_algo_cpp_library(
     name = "all_algorithms",
     deps = [
-        ":fruchterman",
+        ":force",
     ],
 )
 
